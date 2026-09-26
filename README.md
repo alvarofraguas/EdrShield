@@ -125,6 +125,8 @@ EdrShield is now monitoring. Any hostile WFP filters or QoS throttling policies 
 
 ## Usage
 
+**Service management:**
+
 | Command | Description |
 |---------|-------------|
 | `edrshield.exe install` | Install as a Windows service (auto-start on boot) |
@@ -132,6 +134,11 @@ EdrShield is now monitoring. Any hostile WFP filters or QoS throttling policies 
 | `edrshield.exe start` | Start the service |
 | `edrshield.exe stop` | Stop the service |
 | `edrshield.exe status` | Show service state and WFP/QoS summary |
+
+**Diagnostics:**
+
+| Command | Description |
+|---------|-------------|
 | `edrshield.exe scan` | One-shot scan for hostile filters/policies |
 | `edrshield.exe monitor` | Run monitor in foreground (Ctrl+C to stop) |
 | `edrshield.exe protect` | Register protective PERMIT filters |
