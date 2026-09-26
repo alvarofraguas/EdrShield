@@ -28,7 +28,7 @@
  * Build configuration
  * ═══════════════════════════════════════════ */
 
-#define EDRSHIELD_VERSION       "1.0.0"
+#define EDRSHIELD_VERSION       "1.1.0"
 #define MONITOR_INTERVAL_MS     1000
 #define QOS_CHECK_INTERVAL_MS   5000
 #define MAX_FILTERS_ENUM        8192
