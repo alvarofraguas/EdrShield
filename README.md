@@ -117,7 +117,7 @@ edrshield.exe install
 ### 3. Start
 
 ```batch
-sc start EdrShieldSvc
+edrshield.exe start
 ```
 
 EdrShield is now monitoring. Any hostile WFP filters or QoS throttling policies will be detected and removed automatically.
@@ -128,10 +128,16 @@ EdrShield is now monitoring. Any hostile WFP filters or QoS throttling policies 
 
 | Command | Description |
 |---------|-------------|
-| `edrshield.exe install` | Install as a Windows service (`EdrShieldSvc`) |
-| `edrshield.exe uninstall` | Remove the service |
-| `edrshield.exe monitor` | Run in foreground console mode (for testing/debugging) |
-| `edrshield.exe version` | Display version information |
+| `edrshield.exe install` | Install as a Windows service (auto-start on boot) |
+| `edrshield.exe uninstall` | Stop and remove the service |
+| `edrshield.exe start` | Start the service |
+| `edrshield.exe stop` | Stop the service |
+| `edrshield.exe status` | Show service state and WFP/QoS summary |
+| `edrshield.exe scan` | One-shot scan for hostile filters/policies |
+| `edrshield.exe monitor` | Run monitor in foreground (Ctrl+C to stop) |
+| `edrshield.exe protect` | Register protective PERMIT filters |
+| `edrshield.exe version` | Show version |
+| `edrshield.exe help` | Show usage help |
 
 ### Logging
 

@@ -16,15 +16,19 @@ static void PrintBanner(void) {
 static void PrintUsage(void) {
     PrintBanner();
     printf("  Usage: edrshield.exe <command>\n\n");
-    printf("  Commands:\n");
-    printf("    install       Install as Windows service\n");
-    printf("    uninstall     Remove Windows service\n");
-    printf("    monitor       Run monitor in foreground (console)\n");
+    printf("  Service:\n");
+    printf("    install       Install as Windows service (auto-start on boot)\n");
+    printf("    uninstall     Stop and remove the service\n");
+    printf("    start         Start the service\n");
+    printf("    stop          Stop the service\n");
+    printf("    status        Show service state and WFP/QoS summary\n");
+    printf("\n");
+    printf("  Diagnostics:\n");
     printf("    scan          One-shot scan for hostile filters/policies\n");
+    printf("    monitor       Run monitor in foreground (Ctrl+C to stop)\n");
     printf("    protect       Register protective PERMIT filters\n");
-    printf("    status        Show current WFP/QoS state\n");
-    printf("    service       Run as service (called by SCM)\n");
     printf("    version       Show version\n");
+    printf("    help          Show this help\n");
     printf("\n");
     printf("  Requires: Administrator privileges\n");
     printf("  Logs to:  %s\n", LOG_FILE);
@@ -75,6 +79,107 @@ static void CmdScan(void) {
     WfpEngineClose(engine);
 }
 
+static void CmdStart(void) {
+    SC_HANDLE hScm = OpenSCManagerW(NULL, NULL, SC_MANAGER_CONNECT);
+    if (!hScm) {
+        printf("[!] Cannot open SCM (run as admin)\n");
+        return;
+    }
+    SC_HANDLE hSvc = OpenServiceW(hScm, SERVICE_NAME, SERVICE_START | SERVICE_QUERY_STATUS);
+    if (!hSvc) {
+        printf("[!] Service not installed. Run 'edrshield.exe install' first.\n");
+        CloseServiceHandle(hScm);
+        return;
+    }
+
+    SERVICE_STATUS status;
+    QueryServiceStatus(hSvc, &status);
+    if (status.dwCurrentState == SERVICE_RUNNING) {
+        printf("[*] Service is already running.\n");
+        CloseServiceHandle(hSvc);
+        CloseServiceHandle(hScm);
+        return;
+    }
+
+    if (StartServiceW(hSvc, 0, NULL)) {
+        printf("[+] Service starting...\n");
+        for (int i = 0; i < 10; i++) {
+            Sleep(500);
+            QueryServiceStatus(hSvc, &status);
+            if (status.dwCurrentState == SERVICE_RUNNING) {
+                printf("[+] Service started.\n");
+                break;
+            }
+        }
+        if (status.dwCurrentState != SERVICE_RUNNING)
+            printf("[*] Service is still starting (state=%lu)\n", status.dwCurrentState);
+    } else {
+        DWORD err = GetLastError();
+        if (err == ERROR_SERVICE_ALREADY_RUNNING)
+            printf("[*] Service is already running.\n");
+        else
+            printf("[!] StartService failed: 0x%08lX\n", err);
+    }
+
+    CloseServiceHandle(hSvc);
+    CloseServiceHandle(hScm);
+}
+
+static void CmdStop(void) {
+    SC_HANDLE hScm = OpenSCManagerW(NULL, NULL, SC_MANAGER_CONNECT);
+    if (!hScm) {
+        printf("[!] Cannot open SCM (run as admin)\n");
+        return;
+    }
+    SC_HANDLE hSvc = OpenServiceW(hScm, SERVICE_NAME, SERVICE_STOP | SERVICE_QUERY_STATUS);
+    if (!hSvc) {
+        printf("[!] Service not installed.\n");
+        CloseServiceHandle(hScm);
+        return;
+    }
+
+    SERVICE_STATUS status;
+    QueryServiceStatus(hSvc, &status);
+    if (status.dwCurrentState == SERVICE_STOPPED) {
+        printf("[*] Service is already stopped.\n");
+        CloseServiceHandle(hSvc);
+        CloseServiceHandle(hScm);
+        return;
+    }
+
+    if (ControlService(hSvc, SERVICE_CONTROL_STOP, &status)) {
+        printf("[+] Stopping service...\n");
+        for (int i = 0; i < 10; i++) {
+            Sleep(500);
+            QueryServiceStatus(hSvc, &status);
+            if (status.dwCurrentState == SERVICE_STOPPED) {
+                printf("[+] Service stopped.\n");
+                break;
+            }
+        }
+        if (status.dwCurrentState != SERVICE_STOPPED)
+            printf("[*] Service is still stopping (state=%lu)\n", status.dwCurrentState);
+    } else {
+        printf("[!] StopService failed: 0x%08lX\n", GetLastError());
+    }
+
+    CloseServiceHandle(hSvc);
+    CloseServiceHandle(hScm);
+}
+
+static const char *ServiceStateStr(DWORD state) {
+    switch (state) {
+        case SERVICE_STOPPED:          return "STOPPED";
+        case SERVICE_START_PENDING:    return "STARTING";
+        case SERVICE_STOP_PENDING:     return "STOPPING";
+        case SERVICE_RUNNING:          return "RUNNING";
+        case SERVICE_CONTINUE_PENDING: return "RESUMING";
+        case SERVICE_PAUSE_PENDING:    return "PAUSING";
+        case SERVICE_PAUSED:           return "PAUSED";
+        default:                       return "UNKNOWN";
+    }
+}
+
 static void CmdStatus(void) {
     HANDLE engine = NULL;
     if (WfpEngineOpen(&engine) != ERROR_SUCCESS) return;
@@ -83,6 +188,23 @@ static void CmdStatus(void) {
     printf("  ═══════════════════════════════════════════\n");
     printf("  EdrShield v%s - Status\n", EDRSHIELD_VERSION);
     printf("  ═══════════════════════════════════════════\n\n");
+
+    SC_HANDLE hScm = OpenSCManagerW(NULL, NULL, SC_MANAGER_CONNECT);
+    if (hScm) {
+        SC_HANDLE hSvc = OpenServiceW(hScm, SERVICE_NAME, SERVICE_QUERY_STATUS);
+        if (hSvc) {
+            SERVICE_STATUS svcStatus;
+            if (QueryServiceStatus(hSvc, &svcStatus))
+                printf("  [i]  Service: %s\n",
+                       ServiceStateStr(svcStatus.dwCurrentState));
+            else
+                printf("  [i]  Service: query failed\n");
+            CloseServiceHandle(hSvc);
+        } else {
+            printf("  [i]  Service: NOT INSTALLED\n");
+        }
+        CloseServiceHandle(hScm);
+    }
 
     WfpDiscoverTrustedProviders(engine);
     printf("  [i]  Trusted WFP providers: %d\n", WfpGetTrustedProviderCount());
@@ -233,6 +355,14 @@ int wmain(int argc, wchar_t *argv[]) {
         PrintBanner();
         ServiceUninstall();
     }
+    else if (_wcsicmp(cmd, L"start") == 0) {
+        PrintBanner();
+        CmdStart();
+    }
+    else if (_wcsicmp(cmd, L"stop") == 0) {
+        PrintBanner();
+        CmdStop();
+    }
     else if (_wcsicmp(cmd, L"monitor") == 0) {
         PrintBanner();
         CmdMonitor();
@@ -257,6 +387,10 @@ int wmain(int argc, wchar_t *argv[]) {
     }
     else if (_wcsicmp(cmd, L"version") == 0) {
         PrintBanner();
+    }
+    else if (_wcsicmp(cmd, L"help") == 0 || _wcsicmp(cmd, L"--help") == 0
+             || _wcsicmp(cmd, L"-h") == 0 || _wcsicmp(cmd, L"/?") == 0) {
+        PrintUsage();
     }
     else {
         PrintUsage();
