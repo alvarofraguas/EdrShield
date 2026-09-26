@@ -201,7 +201,7 @@ LICENSE            MIT License
 | MSI installer with enterprise deployment | -- | Yes |
 | Priority support | -- | Yes |
 
-For the commercial edition, contact **alvaro.fraguas@gmail.com**.
+For commercial edition inquiries, [open an issue](https://github.com/alvarofraguas/EdrShield/issues).
 
 ---
 
