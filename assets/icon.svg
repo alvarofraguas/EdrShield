@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#1a3352"/>
+      <stop offset="100%" stop-color="#0c1929"/>
+    </radialGradient>
+    <linearGradient id="shieldFill" x1="50%" y1="15%" x2="50%" y2="85%">
+      <stop offset="0%" stop-color="#1e3a5f"/>
+      <stop offset="100%" stop-color="#0f2340"/>
+    </linearGradient>
+    <clipPath id="shieldClip">
+      <path d="M256 72 Q384 82 384 184 Q384 340 256 440 Q128 340 128 184 Q128 82 256 72Z"/>
+    </clipPath>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="outerGlow">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="61" fill="url(#bg)"/>
+
+  <!-- Shield outer glow -->
+  <path d="M256 72 Q384 82 384 184 Q384 340 256 440 Q128 340 128 184 Q128 82 256 72Z"
+        fill="none" stroke="#3b82f6" stroke-width="4" opacity="0.5" filter="url(#outerGlow)"/>
+
+  <!-- Shield body -->
+  <path d="M256 72 Q384 82 384 184 Q384 340 256 440 Q128 340 128 184 Q128 82 256 72Z"
+        fill="url(#shieldFill)"/>
+
+  <!-- Shield border -->
+  <path d="M256 72 Q384 82 384 184 Q384 340 256 440 Q128 340 128 184 Q128 82 256 72Z"
+        fill="none" stroke="#3b82f6" stroke-width="6"/>
+
+  <!-- Signal waveforms clipped to shield -->
+  <g clip-path="url(#shieldClip)">
+    <!-- Wave 1 -->
+    <path d="M100 200 Q150 170 175 200 Q200 230 225 200 Q250 170 275 200 Q300 230 325 200 Q350 170 375 200 Q400 230 420 200"
+          fill="none" stroke="#93c5fd" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
+    <!-- Wave 2 -->
+    <path d="M100 240 Q140 195 180 240 Q220 285 260 240 Q300 195 340 240 Q380 285 420 240"
+          fill="none" stroke="#60a5fa" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+    <!-- Wave 3 (main, center) -->
+    <path d="M100 280 Q145 240 175 280 Q205 320 240 280 Q275 240 305 280 Q335 320 370 280 Q400 240 420 280"
+          fill="none" stroke="#3b82f6" stroke-width="6" stroke-linecap="round" filter="url(#glow)"/>
+    <!-- Wave 4 -->
+    <path d="M100 320 Q155 285 190 320 Q225 355 260 320 Q295 285 330 320 Q365 355 400 320 Q415 300 420 320"
+          fill="none" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+    <!-- Wave 5 -->
+    <path d="M100 355 Q135 335 165 355 Q195 375 225 355 Q255 335 285 355 Q315 375 345 355 Q375 335 405 355 Q420 365 420 355"
+          fill="none" stroke="#93c5fd" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+
+    <!-- Center pulse glow -->
+    <radialGradient id="pulse" cx="50%" cy="55%" r="15%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+    <rect x="0" y="0" width="512" height="512" fill="url(#pulse)"/>
+  </g>
+
+  <!-- Top highlight -->
+  <linearGradient id="highlight" x1="30%" y1="0%" x2="70%" y2="0%">
+    <stop offset="0%" stop-color="white" stop-opacity="0"/>
+    <stop offset="50%" stop-color="white" stop-opacity="0.06"/>
+    <stop offset="100%" stop-color="white" stop-opacity="0"/>
+  </linearGradient>
+  <path d="M256 72 Q384 82 384 184 Q384 340 256 440 Q128 340 128 184 Q128 82 256 72Z"
+        fill="url(#highlight)"/>
+</svg>
