@@ -15,6 +15,8 @@
 
 EdrShield is a lightweight Windows service that defends Endpoint Detection and Response agents against WFP (Windows Filtering Platform) and QoS (Quality of Service) tampering attacks. When an attacker with admin access installs hostile network filters to cut off your EDR's cloud communication, EdrShield detects and removes them within seconds -- keeping your telemetry pipeline alive.
 
+> **Why does this exist?** Most EDR vendors do not yet have effective built-in protection against WFP and QoS silencing attacks in their drivers. EdrShield fills that gap. The day every EDR handles this natively, EdrShield becomes obsolete -- and that's the ideal outcome.
+
 ---
 
 ## The Problem
