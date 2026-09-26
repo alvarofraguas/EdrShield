@@ -1,11 +1,15 @@
 <p align="center">
+  <img src="assets/icon-128.png" alt="EdrShield" width="128" height="128">
+</p>
+
+<h1 align="center">EdrShield</h1>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Platform-Windows%2010%2F11%20%7C%20Server%202016+-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Platform">
   <img src="https://img.shields.io/badge/Language-C-A8B9CC?style=for-the-badge&logo=c&logoColor=white" alt="Language">
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/Edition-Community-blue?style=for-the-badge" alt="Edition">
 </p>
-
-# EdrShield
 
 **Prevent attackers from silencing your EDR.**
 
