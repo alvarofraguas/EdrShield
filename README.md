@@ -96,7 +96,11 @@ If any check matches a trusted source, the filter is left untouched -- even if i
 
 ## Quick Start
 
-### 1. Build
+### Option A: Download signed release
+
+Pre-built, code-signed binaries are available on the [Releases](https://github.com/alvarofraguas/EdrShield/releases) page. Each release is signed with a Certum Open Source Developer certificate and includes a SHA-256 hash for verification.
+
+### Option B: Build from source
 
 Requires [Visual Studio Build Tools 2022](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022) (MSVC).
 
@@ -106,17 +110,12 @@ build.bat
 
 Output: `build\edrshield.exe`
 
-### 2. Install
+### Install and start
 
 Run from an elevated (Administrator) command prompt:
 
 ```batch
 edrshield.exe install
-```
-
-### 3. Start
-
-```batch
 edrshield.exe start
 ```
 
