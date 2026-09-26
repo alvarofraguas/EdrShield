@@ -242,4 +242,4 @@ Please ensure your code compiles cleanly with `/W4` warning level and follows th
 
 MIT License. See [LICENSE](LICENSE) for details.
 
-Copyright (c) 2026 Alvaro Fraguas
+Copyright (c) 2026 alvarofraguas

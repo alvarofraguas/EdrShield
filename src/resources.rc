@@ -15,11 +15,11 @@ BEGIN
   BEGIN
     BLOCK "040904B0"
     BEGIN
-      VALUE "CompanyName", "Alvaro Fraguas"
+      VALUE "CompanyName", "alvarofraguas"
       VALUE "FileDescription", "EDR Shield - WFP/QoS Tamper Protection"
       VALUE "FileVersion", "1.0.0"
       VALUE "InternalName", "edrshield"
-      VALUE "LegalCopyright", "Copyright (c) 2026 Alvaro Fraguas. MIT License."
+      VALUE "LegalCopyright", "Copyright (c) 2026 alvarofraguas. MIT License."
       VALUE "OriginalFilename", "edrshield.exe"
       VALUE "ProductName", "EdrShield Community Edition"
       VALUE "ProductVersion", "1.0.0"
